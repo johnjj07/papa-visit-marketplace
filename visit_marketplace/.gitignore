@@ -26,3 +26,5 @@ visit_marketplace-*.tar
 /tmp/
 
 /.idea
+
+*.iml
