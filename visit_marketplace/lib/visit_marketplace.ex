@@ -25,16 +25,16 @@ defmodule VisitMarketplace do
   end
 
 
-  defp create_visit(pid, {available_mins, visit_mins}, member_id, tasks) when available_mins >= visit_mins do
+  defp create_visit(pid, available_mins, visit_mins, member_id, tasks) when available_mins >= visit_mins do
     VisitMarketplace.VisitRepository.create_visit(pid, member_id, visit_mins, tasks)
   end
 
-  defp create_visit(_pid, _, member_id, _) do
+  defp create_visit(_pid, _, _, member_id, _) do
     {:error, "Member #{member_id} does not have enough minutes to create this visit}"}
   end
 
   def accept_visit(pid, member, pal, visit_id) do
-    visit = VisitMarketplace.VisitRepository.
+    visit = VisitMarketplace.VisitRepository.visit(pid, visit_id)
     VisitMarketplace.UserRepository.update_minutes(pid, member, pal, visit.minutes)
     |> create_transaction(pid, {member, pal, visit.visit_id})
   end

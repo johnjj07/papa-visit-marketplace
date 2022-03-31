@@ -22,6 +22,12 @@ defmodule VisitMarketplace.VisitRepository do
     {:reply, {:ok, visit}, {id + 1, new_visits}}
   end
 
+  def handle_call({:visit, visit_id}, _from, state) do
+    {_, visits} = state
+    Map.get(visits, visit_id)
+    {:reply, {:ok, Map.get(visits, visit_id)}, state}
+  end
+
   def list_all(pid) do
     GenServer.call(pid, {:current})
       |> Enum.map(fn {k, v} -> v end)
@@ -30,5 +36,9 @@ defmodule VisitMarketplace.VisitRepository do
 
   def create_visit(pid, member, minutes, tasks) do
     GenServer.call(pid, {:add_visit, member, minutes, tasks})
+  end
+
+  def visit(pid, visit_id) do
+    GenServer.call(pid, {:visit, visit_id})
   end
 end

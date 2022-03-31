@@ -48,7 +48,7 @@ defmodule VisitMarketplace.UserRepository do
     GenServer.cast(pid, {:add_user, user})
   end
 
-  def update_minutes(pid, member, pal, visit_minutes) do
-    GenServer.call({:update_minutes, member_id, pal_id, visit_minutes})
+  def update_minutes(pid, member_id, pal_id, visit_minutes) do
+    GenServer.call(pid, {:update_minutes, member_id, pal_id, visit_minutes})
   end
 end
