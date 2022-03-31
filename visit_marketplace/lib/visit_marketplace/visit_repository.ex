@@ -15,17 +15,11 @@ defmodule VisitMarketplace.VisitRepository do
     {:reply, visits, state}
   end
 
-  def handle_cast({:add_visit, member, minutes, tasks}, state) do
+  def handle_call({:add_visit, member, minutes, tasks}, _from, state) do
     {id, visits} = state
     visit = Visit.create(id, member, minutes, tasks)
-    new_visits =
-    {
-      :noreply,
-      {
-        id + 1,
-        Map.update(visits, visit.member, [visit], fn existing -> [visit | existing] end)
-      }
-    }
+    new_visits = Map.put(visits, id, visit)
+    {:reply, {:ok, visit}, {id + 1, new_visits}}
   end
 
   def list_all(pid) do
@@ -35,6 +29,6 @@ defmodule VisitMarketplace.VisitRepository do
   end
 
   def create_visit(pid, member, minutes, tasks) do
-    GenServer.cast(pid, {:add_visit, member, minutes, tasks})
+    GenServer.call(pid, {:add_visit, member, minutes, tasks})
   end
 end

@@ -10,10 +10,12 @@ defmodule VisitMarketplace.TransactionRepository do
     {:ok, %{}}
   end
 
-  def handle_cast({:create, member, pal, visit}, state) do
+  def handle_call({:create, member, pal, visit}, state) do
+    transaction = Transaction.create(member, pal, visit)
     {
-      :noreply,
-      Map.put(state, visit.id, Transaction.create(member, pal, visit))
+      :reply,
+      transaction,
+      Map.put(state, visit.id, transaction)
     }
   end
 
